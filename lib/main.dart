@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/intl.dart';
 
 import 'memo_service.dart';
 
@@ -89,6 +90,9 @@ class _HomePageState extends State<HomePage> {
                         );
                         // 삭제
                       },
+                      trailing: Text(memo.timeStamp == null
+                          ? ""
+                          : memo.timeStamp.toString().substring(0, 19)),
                     );
                   },
                 ),
@@ -156,6 +160,7 @@ class DetailPage extends StatelessWidget {
           onChanged: (value) {
             // 텍스트필드 안의 값이 변할 때
             memoService.updateMemo(index: index, content: value);
+            memoService.timeMemo(index: index, timeStamp: DateTime.now());
           },
         ),
       ),

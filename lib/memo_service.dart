@@ -6,17 +6,27 @@ import 'main.dart';
 
 // Memo 데이터의 형식을 정해줍니다. 추후 isPinned, updatedAt 등의 정보도 저장할 수 있습니다.
 class Memo {
-  Memo({required this.content, this.isChecked = false});
+  Memo({required this.content, this.isChecked = false, this.timeStamp});
 
   String content;
   bool isChecked;
+  DateTime? timeStamp;
 
   Map toJson() {
-    return {'content': content, 'isChecked': isChecked};
+    return {
+      'content': content,
+      'isChecked': isChecked,
+      'timeStamp': timeStamp?.toIso8601String()
+    };
   }
 
   factory Memo.fromJson(json) {
-    return Memo(content: json['content'], isChecked: json['isChecked']);
+    return Memo(
+      content: json['content'],
+      isChecked: json['isChecked'],
+      timeStamp:
+          json['timeStamp'] == null ? null : DateTime.parse(json['timeStamp']),
+    );
   }
 }
 
@@ -27,12 +37,12 @@ class MemoService extends ChangeNotifier {
   }
 
   List<Memo> memoList = [
-    Memo(content: '장보기 목록: 사과, 양파', isChecked: false), // 더미(dummy) 데이터
-    Memo(content: '새 메모', isChecked: false), // 더미(dummy) 데이터
+    Memo(content: '장보기 목록: 사과, 양파'), // 더미(dummy) 데이터
+    Memo(content: '새 메모'), // 더미(dummy) 데이터
   ];
 
   createMemo({required String content}) {
-    Memo memo = Memo(content: content);
+    Memo memo = Memo(content: content, timeStamp: DateTime.now());
     memoList.add(memo);
     notifyListeners(); // Consumer<MemoService>의 builder 부분을 호출해서 화면 새로고침
     saveMemoList();
@@ -41,6 +51,7 @@ class MemoService extends ChangeNotifier {
   updateMemo({required int index, required String content}) {
     Memo memo = memoList[index];
     memo.content = content;
+    memo.timeStamp = DateTime.now();
     notifyListeners();
     saveMemoList();
   }
@@ -86,6 +97,13 @@ class MemoService extends ChangeNotifier {
       }
       return -1;
     });
+    notifyListeners();
+    saveMemoList();
+  }
+
+  timeMemo({required int index, required DateTime timeStamp}) {
+    Memo memo = memoList[index];
+    memo.timeStamp = timeStamp;
     notifyListeners();
     saveMemoList();
   }
