@@ -6,18 +6,17 @@ import 'main.dart';
 
 // Memo 데이터의 형식을 정해줍니다. 추후 isPinned, updatedAt 등의 정보도 저장할 수 있습니다.
 class Memo {
-  Memo({
-    required this.content,
-  });
+  Memo({required this.content, this.isChecked = false});
 
   String content;
+  bool isChecked;
 
   Map toJson() {
-    return {'content': content};
+    return {'content': content, 'isChecked': isChecked};
   }
 
   factory Memo.fromJson(json) {
-    return Memo(content: json['content']);
+    return Memo(content: json['content'], isChecked: json['isChecked']);
   }
 }
 
@@ -28,8 +27,8 @@ class MemoService extends ChangeNotifier {
   }
 
   List<Memo> memoList = [
-    Memo(content: '장보기 목록: 사과, 양파'), // 더미(dummy) 데이터
-    Memo(content: '새 메모'), // 더미(dummy) 데이터
+    Memo(content: '장보기 목록: 사과, 양파', isChecked: false), // 더미(dummy) 데이터
+    Memo(content: '새 메모', isChecked: false), // 더미(dummy) 데이터
   ];
 
   createMemo({required String content}) {
@@ -72,5 +71,22 @@ class MemoService extends ChangeNotifier {
     // [{"content": "1"}, {"content": "2"}]
 
     memoList = memoJsonList.map((json) => Memo.fromJson(json)).toList();
+  }
+
+  checkedMemo({required int index, required bool isChecked}) {
+    Memo memo = memoList[index];
+    if (memo.isChecked) {
+      memo.isChecked = false;
+    } else {
+      memo.isChecked = true;
+    }
+    memoList.sort((a, b) {
+      if (b.isChecked) {
+        return 1;
+      }
+      return -1;
+    });
+    notifyListeners();
+    saveMemoList();
   }
 }
