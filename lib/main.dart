@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:intl/intl.dart';
 
 import 'memo_service.dart';
 
@@ -89,6 +88,11 @@ class _HomePageState extends State<HomePage> {
                           ),
                         );
                         // 삭제
+                        memoService.memoList.forEach((element) {
+                          if (element.content.isEmpty) {
+                            memoService.emptyMemo(element: element);
+                          }
+                        });
                       },
                       trailing: Text(memo.timeStamp == null
                           ? ""
@@ -110,6 +114,11 @@ class _HomePageState extends State<HomePage> {
                 ),
               );
               // 삭제
+              memoService.memoList.forEach((element) {
+                if (element.content.isEmpty) {
+                  memoService.emptyMemo(element: element);
+                }
+              });
             },
           ),
         );

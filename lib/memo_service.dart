@@ -107,4 +107,10 @@ class MemoService extends ChangeNotifier {
     notifyListeners();
     saveMemoList();
   }
+
+  emptyMemo({required Memo element}) {
+    memoList.remove(element);
+    notifyListeners();
+    saveMemoList();
+  }
 }
