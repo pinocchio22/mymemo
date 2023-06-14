@@ -88,11 +88,14 @@ class _HomePageState extends State<HomePage> {
                           ),
                         );
                         // 삭제
-                        memoService.memoList.forEach((element) {
-                          if (element.content.isEmpty) {
-                            memoService.emptyMemo(element: element);
-                          }
-                        });
+                        if (memo.content.isEmpty) {
+                          memoService.emptyMemo(element: memo);
+                        }
+                        // memoService.memoList.forEach((element) {
+                        //   if (element.content.isEmpty) {
+                        //     memoService.emptyMemo(element: element);
+                        //   }
+                        // });
                       },
                       trailing: Text(memo.timeStamp == null
                           ? ""
@@ -114,10 +117,12 @@ class _HomePageState extends State<HomePage> {
                 ),
               );
               // 삭제
+              if (memoList[memoService.memoList.length - 1].content.isEmpty) {
+                memoService.emptyMemo(
+                    element: memoList[memoService.memoList.length - 1]);
+              }
               memoService.memoList.forEach((element) {
-                if (element.content.isEmpty) {
-                  memoService.emptyMemo(element: element);
-                }
+                if (element.content.isEmpty) {}
               });
             },
           ),
